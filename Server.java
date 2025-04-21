@@ -144,7 +144,6 @@ public class Server {
             int port = 5000;
             ServerSocket server = new ServerSocket(port);
             String localIP = InetAddress.getLocalHost().getHostAddress();
-            System.out.println(localIP);
 
             Connection conn = Databse.initializeDatabase();
             if (conn != null) {
