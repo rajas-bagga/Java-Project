@@ -24,7 +24,7 @@ public class ViewServerLogs {
         frame.add(scrollPane);
 
         try {
-            Connection conn = Databse.initializeDatabase();
+            Connection conn = Database.initializeDatabase();
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM logs");

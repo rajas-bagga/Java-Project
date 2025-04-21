@@ -146,7 +146,7 @@ public class Server {
             
             String localIP = InetAddress.getLocalHost().getHostAddress();
 
-            Connection conn = Databse.initializeDatabase();
+            Connection conn = Database.initializeDatabase();
             if (conn != null) {
                 Date now = new Date();
                 String date = new SimpleDateFormat("yyyy-MM-dd").format(now);
