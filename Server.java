@@ -1,11 +1,15 @@
+
 import java.io.*;
 import java.net.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
-    // Stores connected clients and their names - using concurrent map for thread
-    // safety
+
     private static final ConcurrentHashMap<Socket, String> clients = new ConcurrentHashMap<>();
     // Set to keep track of usernames - helps avoid duplicate names
     private static final Set<String> usernames = Collections.synchronizedSet(new HashSet<>());
@@ -137,10 +141,37 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            ServerSocket server = new ServerSocket(5000);
+            int port = 5000;
+            ServerSocket server = new ServerSocket(port);
+            String localIP = InetAddress.getLocalHost().getHostAddress();
+            System.out.println(localIP);
+
+            Connection conn = Databse.initializeDatabase();
+            if (conn != null) {
+                Date now = new Date();
+                String date = new SimpleDateFormat("yyyy-MM-dd").format(now);
+                String time = new SimpleDateFormat("HH:mm:ss").format(now);
+
+                String sql = "INSERT INTO logs(date, time, ip, port) VALUES (?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, date);
+                stmt.setString(2, time);
+                stmt.setString(3, localIP);
+                stmt.setInt(4, port);
+                int rowsInserted = stmt.executeUpdate();
+                if (rowsInserted > 0) {
+                    System.out.println("Server log inserted into database.");
+                }
+            } else {
+                System.out.println("Failed to create a new database.");
+            }
+
             listenIncomingConnections(server);
         } catch (IOException e) {
             System.out.println("Could not start server on port 5000");
+            e.printStackTrace();
+        } catch (SQLException e)  {
+            System.out.println("Database error:");
             e.printStackTrace();
         }
     }
