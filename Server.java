@@ -16,7 +16,7 @@ public class Server {
 
     // Listens for new client connections
     public static void listenIncomingConnections(ServerSocket serverSocket) throws IOException {
-        System.out.println("Server started on port 5000");
+        
         System.out.println("Waiting for clients to connect...");
 
         while (true) {
@@ -71,7 +71,6 @@ public class Server {
                     continue;
                 }
 
-                System.out.println(finalUsername + ": " + message);
                 broadcast(message, finalUsername);
             }
 
@@ -143,6 +142,8 @@ public class Server {
         try {
             int port = 5000;
             ServerSocket server = new ServerSocket(port);
+            System.out.println("Server started on port " + port);
+            
             String localIP = InetAddress.getLocalHost().getHostAddress();
 
             Connection conn = Databse.initializeDatabase();
